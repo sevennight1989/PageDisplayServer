@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	namespace：必须与对应的接口全类名一致
+	id:必须与对应接口的某个对应的方法名一致
+	
+ -->
+<mapper namespace="com.tgb.mapper.UserMapper">
+	
+	<resultMap type="com.tgb.dto.UserDTO" id="UserMap">
+		<result column="user_id" property="id" jdbcType="VARCHAR"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="user_age" property="age" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="BaseColumns">
+		user_name,user_age
+	</sql>
+	
+	<insert id="save" parameterType="User">
+		insert into t_user(
+		<include refid="BaseColumns"></include>
+		 )
+		  values(#{userName},#{age})
+	</insert>
+	
+	<update id="update" parameterType="User">
+		update t_user set user_name=#{userName},user_age=#{age} where user_id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from t_user where user_id=#{id}
+	</delete>
+	
+	 <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路劲 -->  
+	<select id="findById" parameterType="int" resultMap="UserMap">
+		select user_id ,user_name ,user_age  from t_user where user_id=#{id}
+	</select>
+	
+	<select id="findAll" resultMap="UserMap">
+		select user_id ,user_name ,user_age  from t_user
+	</select>
+	
+	<resultMap type="com.tgb.dto.ProBeanDTO" id="ProBeans">
+	<result column="TITLE" property="title" jdbcType="VARCHAR"/>
+	<result column="APPROVECOMMENT" property="approveComment" jdbcType="VARCHAR"/>
+	<result column="OPERATETIME" property="operaTime" jdbcType="VARCHAR"/>
+	<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+	<result column="RESPERSONTAG" property="resPersonTAG" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="findProBean" resultMap="ProBeans">
+		select TITLE,APPROVECOMMENT,OPERATETIME,STATUS,RESPERSONTAG from tb_progress
+	</select>
+	<resultMap type="com.tgb.dto.ResPersonDTO" id="ResPerson">
+	<result column="NAME" property="name" jdbcType="VARCHAR"/>
+	<result column="TAG" property="tag" jdbcType="VARCHAR"/>
+	<result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="findResPerson" parameterType="String" resultMap="ResPerson">
+		select NAME,TAG,PHONE from tb_resPerson where TAG=#{tag}
+	</select>
+	
+	<resultMap type="com.tgb.model.ProBean" id="Pro">
+		<result column="TITLE" property="title" jdbcType="VARCHAR"/>
+		<result column="APPROVECOMMENT" property="approveComment" jdbcType="VARCHAR"/>
+		<result column="OPERATETIME" property="operaTime" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+		<collection property="resPersons" ofType="com.tgb.model.ResPerson">
+			<result column="NAME" property="name" jdbcType="VARCHAR" />
+			<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+
+	<select id="findProgress" resultMap="Pro">
+	select t1.TITLE,t1.APPROVECOMMENT,t1.OPERATETIME,t1.STATUS,t2.NAME,t2.PHONE
+	from tb_progress t1 LEFT JOIN tb_resperson t2 on t1.RESPERSONTAG=t2.TAG
+	</select>
+	
+</mapper>
