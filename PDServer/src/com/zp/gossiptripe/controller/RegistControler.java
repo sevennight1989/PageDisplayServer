@@ -36,7 +36,7 @@ public class RegistControler {
 				String pic_path = "D:\\upload\\";  
 				
 				byte content[] = file.getBytes();
-				String path = pic_path + registForm.getFileName()+".jpg";
+				String path = pic_path + registForm.getFileName();
 				File outFile = new File(path);
 				if(!outFile.exists()){
 					outFile.createNewFile();
