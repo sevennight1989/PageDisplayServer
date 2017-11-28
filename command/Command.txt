@@ -1,0 +1,7 @@
+http://192.168.1.166:8080/PDServer/common/regist.do?username=qwert123&password=qqqqq&name=王小二&birthday=20010919&address=上海市浦东新区&email=123488992@qq.com&detialaddress=张杨路100号&mechanism=少年宫
+http://192.168.1.166:8080/PDServer/common/regist.do?username=qwert&password=kieod&name=%E5%A4%A7%E9%A3%9E&birthday=20010919&address=%E4%B8%8A%E6%B5%B7%E5%B8%82%E6%B5%A6%E4%B8%9C%E6%96%B0%E5%8C%BA&email=123488992@qq.com&detialaddress=%E5%BC%A0%E6%9D%A8%E8%B7%AF100%E5%8F%B7&mechanism=%E5%B0%91%E5%B9%B4%E5%AE%AB
+
+
+
+
+http://192.168.1.166:8080/PDServer/common/login.do?username=dddd123&password=qqqqq

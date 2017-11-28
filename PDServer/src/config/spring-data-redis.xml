@@ -6,11 +6,10 @@
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context-3.0.xsd " 
-	default-autowire="byName">
+	default-autowire="byName"><!--
 
 	<context:property-placeholder location="/META-INF/config/redis.properties" />
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-
 		<property name="maxIdle" value="${redis.maxIdle}"></property>
 		<property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}"></property>
 		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}"></property>
@@ -37,4 +36,4 @@
 				class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
 		</property>
 	</bean>
-</beans>
+--></beans>

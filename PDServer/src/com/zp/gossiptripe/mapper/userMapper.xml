@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	namespace：必须与对应的接口全类名一致
+	id:必须与对应接口的某个对应的方法名一致
+	
+ -->
+<mapper namespace="com.zp.gossiptripe.mapper.UserMapper">
+	
+
+	<sql id="BaseColumns">
+		username,password,name,birthday,address,email,detialaddress,mechanism
+	</sql>
+	
+	<insert id="save" parameterType="com.zp.gossiptripe.model.RegistBean">
+		insert into tb_userinfo(
+		<include refid="BaseColumns"></include>
+		 )
+		  values(#{username},#{password},#{name},#{birthday},#{address},#{email},#{detialaddress},#{mechanism})
+	</insert>
+	
+	<select id="userCount" parameterType="String" resultType="int">
+		select count(*) from tb_userinfo where username=#{username}
+	</select>
+
+	<resultMap type="com.zp.gossiptripe.model.UserBaseInfoBean" id="UserInfoMap">
+		<result column="session" property="session" jdbcType="VARCHAR"/>
+		<result column="birthday" property="birthday" jdbcType="VARCHAR"/>
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+		<result column="email" property="email" jdbcType="VARCHAR"/>
+		<result column="detialaddress" property="detialaddress" jdbcType="VARCHAR"/>
+		<result column="mechanism" property="mechanism" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<select id="getUserInfo" parameterType="com.zp.gossiptripe.form.LoginForm" resultMap="UserInfoMap">
+		select t1.name,t1.birthday,t1.address,t1.email,t1.detialaddress,t1.mechanism,t2.session
+		from tb_userinfo t1 LEFT JOIN tb_loginstatus t2 on t1.username=t2.username where t1.username=#{username}
+		 and t1.password=#{password}
+	</select>
+
+</mapper>

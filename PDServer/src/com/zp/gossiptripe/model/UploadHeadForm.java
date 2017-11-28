@@ -1,6 +1,6 @@
 package com.zp.gossiptripe.model;
 
-public class RegistForm {
+public class UploadHeadForm extends BaseBean{
 
 	private String fileName;
 

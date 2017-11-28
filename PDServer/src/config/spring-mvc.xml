@@ -10,7 +10,6 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<!-- 注解扫描包 -->
-	<context:component-scan base-package="com.tgb" />
 	<context:component-scan base-package="com.zp.gossiptripe" />
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
