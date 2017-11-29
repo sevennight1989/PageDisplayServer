@@ -10,4 +10,5 @@ public interface UserMapper {
 	void save(RegistBean registBean);
 	int userCount(String username);
 	UserBaseInfoBean getUserInfo(LoginForm loginForm);
+	UserBaseInfoBean getUserInfoBySession(String session);
 }

@@ -38,16 +38,21 @@ public class RegistControler {
 	@Autowired
 	ISessionService mISessionService;
 
+	/**
+	 * 测试redis缓存
+	 * 
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/testredis")
 	public ModelMap testRedis() {
 		ModelMap map = new ModelMap();
-//		 RedisUtils.set("name", "Tom", 60);
+		// RedisUtils.set("name", "Tom", 60);
 		try {
 			String name = RedisUtils.get("name").toString();
 			map.put("name", name);
 		} catch (Exception e) {
-			map.put("name","找不到缓存");
+			map.put("name", "找不到缓存");
 		}
 		return map;
 	}
@@ -68,7 +73,7 @@ public class RegistControler {
 		try {
 			if (mUserService.userCount(username) > 0) {
 				map.put("responseCode", "2");
-				map.put("responseMessage", "用户名已经被注册");
+				map.put("responseMessage", Constant.RESPONSE_MEG_2);
 			} else {
 				mUserService.saveUser(registBean);
 				session = AESUtils.Encrypt(username, AESUtils.cKey);
@@ -77,43 +82,85 @@ public class RegistControler {
 				sessionBean.setUsername(username);
 				mISessionService.saveSession(sessionBean);
 				map.put("responseCode", "0");
-				map.put("responseMessage", "请求成功");
+				map.put(Constant.RESPONSE_MES_KEY, "请求成功");
 				map.put("data", session);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("responseCode", "1");
-			map.put("responseMessage", "请求失败 ");
+			map.put(Constant.RESPONSE_MES_KEY, "请求失败 ");
 		}
 		return map;
 	}
-	
+
+	/**
+	 * 登录
+	 * 
+	 * @param loginForm
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/login")
 	public ModelMap login(@ModelAttribute LoginForm loginForm) {
 		ModelMap map = new ModelMap();
 		System.out.println("入参: " + loginForm.toString());
-		try{
-			UserBaseInfoBean userBaseInfoBean = mUserService.getUserInfo(loginForm);
-			
-			if(userBaseInfoBean !=null){
-				System.out.println("出参: " + userBaseInfoBean.toString());
-				map.put("responseCode", "0");
-				map.put("responseMessage", "登录成功");
-				map.put("data", userBaseInfoBean);
-			}else{
-				map.put("responseCode", "3");
-				map.put("responseMessage", "用户名不存在或用户或密码错误");
+		try {
+			if (mUserService.userCount(loginForm.getUsername()) == 0) {
+				map.put(Constant.RESPONSE_CODE_KEY, "3");
+				map.put(Constant.RESPONSE_MES_KEY, Constant.RESPONSE_MEG_3);
+				return map;
 			}
 
-		}catch (Exception e) {
-			map.put("responseCode", "1");
-			map.put("responseMessage", "请求失败");
+			UserBaseInfoBean userBaseInfoBean = mUserService.getUserInfo(loginForm);
+			if (userBaseInfoBean == null) {
+				map.put(Constant.RESPONSE_CODE_KEY, "4");
+				map.put(Constant.RESPONSE_MES_KEY, Constant.RESPONSE_MEG_4);
+				return map;
+			}
+			System.out.println("出参: " + userBaseInfoBean.toString());
+			map.put(Constant.RESPONSE_CODE_KEY, "0");
+			map.put(Constant.RESPONSE_MES_KEY, "登录成功");
+			map.put(Constant.RESPONSE_DATA_KEY, userBaseInfoBean);
+
+		} catch (Exception e) {
+			map.put(Constant.RESPONSE_CODE_KEY, "1");
+			map.put(Constant.RESPONSE_MES_KEY, "请求失败");
 			e.printStackTrace();
 		}
 		return map;
 	}
 	
+	/**
+	 * session登录
+	 * 
+	 * @param loginForm
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/sessionlogin")
+	public ModelMap sessionlogin(@RequestParam(value = "session") String session) {
+		ModelMap map = new ModelMap();
+		System.out.println("入参: " + session);
+		try {
+			UserBaseInfoBean userBaseInfoBean = mUserService.getUserInfoBySession(session);
+			if (userBaseInfoBean == null) {
+				map.put(Constant.RESPONSE_CODE_KEY, "4");
+				map.put(Constant.RESPONSE_MES_KEY, Constant.RESPONSE_MEG_4);
+				return map;
+			}
+			System.out.println("出参: " + userBaseInfoBean.toString());
+			map.put(Constant.RESPONSE_CODE_KEY, "0");
+			map.put(Constant.RESPONSE_MES_KEY, "登录成功");
+			map.put(Constant.RESPONSE_DATA_KEY, userBaseInfoBean);
+		}catch (Exception e) {
+			map.put(Constant.RESPONSE_CODE_KEY, "1");
+			map.put(Constant.RESPONSE_MES_KEY, "请求失败");
+			e.printStackTrace();
+		}
+		return map;
+	}
+		
+		
 	
 
 	/**
@@ -148,13 +195,13 @@ public class RegistControler {
 				FileOutputStream fos = new FileOutputStream(outFile);
 				fos.write(content);
 				fos.close();
-				map.put("responseCode", "0");
-				map.put("responseMessage", "上传成功");
-				map.put("data", "");
+				map.put(Constant.RESPONSE_CODE_KEY, "0");
+				map.put(Constant.RESPONSE_MES_KEY, "上传成功");
+				map.put(Constant.RESPONSE_DATA_KEY, "");
 			} catch (IOException e) {
 				e.printStackTrace();
-				map.put("responseCode", "1");
-				map.put("responseMessage", "上传失败：" + e.getMessage());
+				map.put(Constant.RESPONSE_CODE_KEY, "1");
+				map.put(Constant.RESPONSE_MES_KEY, "上传失败");
 			}
 		}
 

@@ -39,5 +39,10 @@
 		from tb_userinfo t1 LEFT JOIN tb_loginstatus t2 on t1.username=t2.username where t1.username=#{username}
 		 and t1.password=#{password}
 	</select>
+	
+		<select id="getUserInfoBySession" parameterType="String" resultMap="UserInfoMap">
+		select t1.name,t1.birthday,t1.address,t1.email,t1.detialaddress,t1.mechanism,t2.session
+		from tb_userinfo t1 LEFT JOIN tb_loginstatus t2 on t1.username=t2.username where t2.session = #{session}
+	</select>
 
 </mapper>

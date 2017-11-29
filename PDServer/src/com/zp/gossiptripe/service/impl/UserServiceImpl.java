@@ -29,4 +29,8 @@ public class UserServiceImpl implements IUserService {
 		return mUserMapper.getUserInfo(loginForm);
 	}
 
+	public UserBaseInfoBean getUserInfoBySession(String session) {
+		return mUserMapper.getUserInfoBySession(session);
+	}
+
 }
